@@ -27,7 +27,7 @@
 #include <stdbool.h>
 
 #include "lwan-array.h"
-#include "nawl-coro.h"
+#include "lwan-coro.h"
 
 #ifdef USE_VALGRIND
 #include <valgrind/valgrind.h>

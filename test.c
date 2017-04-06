@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "nawl-coro.h"
+#include "lwan-coro.h"
 
 static int
 foo(coro_t* coro)

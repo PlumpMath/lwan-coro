@@ -6,7 +6,7 @@ CFLAGS = -c -g
 .c:
 	make $*.o
 
-OBJS = reallocarray.o lwan-array.o nawl-coro.o
+OBJS = reallocarray.o lwan-array.o lwan-coro.o
 
 all: test
 
@@ -20,7 +20,7 @@ test: libcoro.a
 
 install: libcoro.a
 	- cp libcoro.a /usr/local/lib
-	- cp nawl-coro.h /usr/local/include
+	- cp lwan-coro.h /usr/local/include
 
 clean:
 	rm -f *.o *~ test libcoro.a core

@@ -21,7 +21,7 @@
 
 #include <stdint.h>
 
-#include "nawl-coro.h"
+#include "lwan-coro.h"
 
 #define DEFAULT_BUFFER_SIZE 4096
 #define DEFAULT_HEADERS_SIZE 512
