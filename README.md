@@ -1,2 +1,2 @@
 # lwan-coro
-coroutine library of lwan
+Coroutine library copy from lwan project(https://github.com/lpereira/lwan)
