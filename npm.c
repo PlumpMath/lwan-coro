@@ -31,8 +31,8 @@ typedef struct _coro_ring_t coro_ring_t;
 APR_RING_HEAD(_coro_ring_t, _coro_elem_t);
 
 
-static int download(coro_t *coro);
 static apr_status_t do_connect(apr_socket_t **sock, coro_t *coro);
+static int download(coro_t *coro);
 static void get(coro_switcher_t *switcher, coro_ring_t *threads,
                 const char *host, const char *path, apr_pool_t *mp);
 
@@ -71,7 +71,6 @@ main(int argc, const char *argv[])
              ep = APR_RING_NEXT(ep, link)) {
             if (coro_resume(ep->coro) != CORO_MAY_RESUME) {
                 APR_RING_REMOVE(ep, link);
-                //coro_free(coro);
             }
         }
     }
@@ -98,7 +97,8 @@ get(coro_switcher_t *switcher, coro_ring_t *threads,
 }
 
 
-int download(coro_t *coro)
+static int
+download(coro_t *coro)
 {
     apr_status_t rv;
     apr_socket_t *s;
@@ -153,30 +153,24 @@ error:
 static apr_status_t
 do_connect(apr_socket_t **sock, coro_t * coro)
 {
-    apr_sockaddr_t *sa;
     apr_socket_t *s;
     apr_status_t rv;
-    struct url_info *uinfo = (struct url_info *) coro_get_data(coro);
+    apr_sockaddr_t *sa;
     apr_pool_t *mp = uinfo->p;
+    struct url_info *uinfo = (struct url_info *) coro_get_data(coro);
     
     rv = apr_sockaddr_info_get(&sa, uinfo->host,
                                APR_INET, DEF_REMOTE_PORT, 0, mp);
-    if (rv != APR_SUCCESS) {
-        return rv;
-    }
+    if (rv != APR_SUCCESS) return rv;
     
     rv = apr_socket_create(&s, sa->family, SOCK_STREAM, APR_PROTO_TCP, mp);
-    if (rv != APR_SUCCESS) {
-        return rv;
-    }
+    if (rv != APR_SUCCESS) return rv;
 
     apr_socket_opt_set(s, APR_SO_NONBLOCK, 1);
     apr_socket_timeout_set(s, DEF_SOCK_TIMEOUT);
 
     rv = apr_socket_connect(s, sa);
-    if (rv != APR_SUCCESS) {
-        return rv;
-    }
+    if (rv != APR_SUCCESS) return rv;
 
     /* nonblocking */
     apr_socket_opt_set(s, APR_SO_NONBLOCK, 1);
