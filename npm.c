@@ -9,7 +9,7 @@
 #include <lwan-coro.h>
 
 #define DEF_REMOTE_HOST   "localhost"
-#define DEF_REMOTE_PORT    8081
+#define DEF_REMOTE_PORT    80
 #define DEF_SOCK_TIMEOUT  (APR_USEC_PER_SEC * 30)
 #define BUFSIZE            4096
 #define CRLF_STR          "\r\n"

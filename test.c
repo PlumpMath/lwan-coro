@@ -1,31 +1,47 @@
 #include <stdio.h>
-#include "lwan-coro.h"
+#include <lwan-coro.h>
+
+struct point {
+    int x, y, maxx, maxy;
+};
+
 
 static int
-foo(coro_t* coro)
+iter(coro_t* coro)
 {
-    void *data = coro_get_data(coro);
-    for (int i = 0; i < 10; i++) {
-        printf("[%d]function_foo, arg=%s\n", i, (const char*)data);
-        coro_yield(coro, CORO_MAY_RESUME);
-    }
+    int i, j;
+    struct point *p = (struct point *) coro_get_data(coro);
     
-    return CORO_FINISHED;
+    for (i = 0; i < p->maxx; i++) {
+        for (j = 0; j < p->maxy; j++) {
+            p = (struct point *) coro_get_data(coro);
+            p->x = i;
+            p->y = j;
+            coro_yield(coro, CORO_MAY_RESUME);
+        }
+    }
+
+    coro_yield(coro, CORO_FINISHED);
+    __builtin_unreachable();
 }
 
 
-int
-main(int argc, char *argv[])
+int main()
 {
     coro_switcher_t switcher;
-    coro_t *coro_foo = coro_new(&switcher, foo, "foo");
+    struct point p = {0, 0, 2, 2};
+    coro_t *coro = coro_new(&switcher, iter, &p);
 
     while (1) {
-        if (coro_resume(coro_foo))
+        if (coro_resume(coro)) {
             break;
+        }
+        struct point *p = (struct point *) coro_get_data(coro);
+        printf("(%d, %d)\n", p->x, p->y);
     }
 
-    coro_free(coro_foo);
+    coro_free(coro);
     
     return 0;
 }
+
