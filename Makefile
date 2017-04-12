@@ -15,12 +15,14 @@ libcoro.a: $(OBJS)
 	- ranlib libcoro.a
 
 test: libcoro.a
-	$(CC) -o test test.c -L. -lcoro
-	./test
+	$(CC) test/test.c -I. -L. -lcoro
+	./a.out
+	$(CC) test/permgen.c -I. -L. -lcoro
+	./a.out
 
 install: libcoro.a
 	- cp libcoro.a /usr/local/lib
 	- cp lwan-coro.h /usr/local/include
 
 clean:
-	rm -f *.o *~ test libcoro.a core
+	rm -f *.o *~ a.out libcoro.a core
