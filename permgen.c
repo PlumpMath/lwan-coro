@@ -60,13 +60,8 @@ main(int argc, char *argv[])
     struct perma pa = { a, n };
     coro_t *coro = coro_new(&switcher, permgen, &pa);
 
-    while (1) {
-        struct perma *pa;
-        
-        if (coro_resume(coro))
-            break;
-        
-        pa = (struct perma *) coro_get_data(coro);
+    while (!coro_resume(coro)) {
+        struct perma *pa = (struct perma *) coro_get_data(coro);
         print_result(pa->a, n);
     }
 
