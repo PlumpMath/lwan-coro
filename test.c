@@ -32,10 +32,7 @@ int main()
     struct point p = {0, 0, 2, 2};
     coro_t *coro = coro_new(&switcher, iter, &p);
 
-    while (1) {
-        if (coro_resume(coro)) {
-            break;
-        }
+    while (!coro_resume(coro)) {
         struct point *p = (struct point *) coro_get_data(coro);
         printf("(%d, %d)\n", p->x, p->y);
     }
