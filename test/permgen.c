@@ -33,7 +33,6 @@ static void swap(int *x, int *y)
 static int
 permgen(coro_t *coro)
 {
-    int i;
     struct perma *pa = (struct perma *) coro_get_data(coro);
     int *a = pa->a;
     int n = pa->n;
@@ -41,6 +40,7 @@ permgen(coro_t *coro)
     if (n <= 0) {
         coro_yield(coro, CORO_MAY_RESUME);
     } else {
+        int i;
         for (i = 0; i < n; i++) {
             swap(a+n-1, a+i);
             pa->n = n - 1;

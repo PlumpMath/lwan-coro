@@ -1,5 +1,6 @@
 CC = gcc
-CFLAGS = -c -g
+CFLAGS = -g 
+#-D__APPLE__ -D__x86_64__
 
 .SUFFIXES: .c
 
